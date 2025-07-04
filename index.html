@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Controle de Ganhos Uber/InDrive/99</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Motoboy Cash</h1>
+
+    <div class="tabs">
+      <button class="tab-button active" onclick="abrirAba('entrada', event)">Registrar Dias</button>
+      <button class="tab-button" onclick="abrirAba('salvos', event)">Dias Salvos</button>
+    </div>
+
+    <div id="entrada" class="tab-content" style="display: block;">
+      <div class="app-grid">
+        <!-- Uber -->
+        <section id="uber">
+          <h2>Uber</h2>
+          <div id="formDiasUber"></div>
+          <button onclick="adicionarDia('uber')">Adicionar Dia</button>
+          <div id="resumoUber" class="resumo"></div>
+        </section>
+
+        <!-- InDrive -->
+        <section id="indrive">
+          <h2>InDrive</h2>
+          <div id="formDiasInDrive"></div>
+          <button onclick="adicionarDia('indrive')">Adicionar Dia</button>
+          <div id="resumoInDrive" class="resumo"></div>
+        </section>
+
+        <!-- 99 -->
+        <section id="noventaNove">
+          <h2>99</h2>
+          <div id="formDias99"></div>
+          <button onclick="adicionarDia('99')">Adicionar Dia</button>
+          <div id="resumo99" class="resumo"></div>
+        </section>
+      </div>
+
+      <div class="consolidado-wrapper">
+        <h2>Consolidado Geral</h2>
+        <button onclick="calcularConsolidado()">Calcular Consolidado</button>
+        <div id="resumoGeral" class="resumo"></div>
+        <canvas id="graficoGastos" width="400" height="400"></canvas>
+      </div>
+    </div>
+
+    <div id="salvos" class="tab-content" style="display: none;">
+      <h2>Dias Salvos</h2>
+     <div id="listaDiasSalvos" class="salvos-container"></div>
+    </div>
+  </div>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
