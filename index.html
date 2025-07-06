@@ -4,12 +4,40 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Controle de Ganhos Uber/InDrive/99</title>
+  <button id="instalarBtn" style="display:none;">📲 Instalar App</button>
   <link rel="stylesheet" href="css/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
  <link rel="manifest" href="/Motoboy-Cash/manifest.json">
 <meta name="theme-color" content="#4a90e2" />
-
 </head>
+  
+  <script>
+  let deferredPrompt;
+  const btnInstalar = document.getElementById('instalarBtn');
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    // Impede o prompt automático
+    e.preventDefault();
+    deferredPrompt = e;
+    btnInstalar.style.display = 'inline-block'; // Exibe o botão
+  });
+
+  btnInstalar.addEventListener('click', () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(choiceResult => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('Usuário aceitou a instalação');
+        } else {
+          console.log('Usuário recusou a instalação');
+        }
+        deferredPrompt = null;
+        btnInstalar.style.display = 'none';
+      });
+    }
+  });
+</script>
+
 
 <script>
 if ('serviceWorker' in navigator) {
