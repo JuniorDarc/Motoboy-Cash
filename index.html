@@ -6,7 +6,19 @@
   <title>Controle de Ganhos Uber/InDrive/99</title>
   <link rel="stylesheet" href="css/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+ <link rel="manifest" href="/Motoboy-Cash/manifest.json">
+<meta name="theme-color" content="#4a90e2" />
+
 </head>
+
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/Motoboy-Cash/service-worker.js')
+    .then(() => console.log('Service Worker registrado'))
+    .catch(err => console.error('Erro SW:', err));
+}
+</script>
+
 <body>
   <div class="container">
     <h1>Motoboy Cash</h1>
