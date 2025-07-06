@@ -254,13 +254,12 @@ button:hover {
 /* Responsividade */
 @media (max-width: 900px) {
   .app-grid {
-    flex-wrap: wrap;
-    flex-direction: row;
+    flex-direction: column;
   }
 
   .app-grid section {
+    flex: none;
     width: 100% !important;
-    min-width: auto;
     margin-bottom: 1.5rem;
   }
 }
