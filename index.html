@@ -4,19 +4,22 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Controle de Ganhos Uber/InDrive/99</title>
+
+  <!-- Define base para todos os links relativos -->
+  <base href="/Motoboy-Cash/">
+
   <link rel="stylesheet" href="css/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
- <link rel="manifest" href="/Motoboy-Cash/manifest.json">
-<meta name="theme-color" content="#4a90e2" />
-
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#4a90e2" />
 </head>
 
 <script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/Motoboy-Cash/service-worker.js')
-    .then(() => console.log('Service Worker registrado'))
-    .catch(err => console.error('Erro SW:', err));
-}
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js')
+      .then(() => console.log('Service Worker registrado'))
+      .catch(err => console.error('Erro SW:', err));
+  }
 </script>
 
 <body>
@@ -65,7 +68,7 @@ if ('serviceWorker' in navigator) {
 
     <div id="salvos" class="tab-content" style="display: none;">
       <h2>Dias Salvos</h2>
-     <div id="listaDiasSalvos" class="salvos-container"></div>
+      <div id="listaDiasSalvos" class="salvos-container"></div>
     </div>
   </div>
 
