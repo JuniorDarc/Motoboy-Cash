@@ -128,29 +128,39 @@ function removerDia(app, index) {
 }
 
 function editarDia(app, index) {
+  console.log(`Editar dia chamado para app: ${app}, index: ${index}`);
+
   // Força abrir a aba 'salvos' antes de mostrar o formulário de edição
-  abrirAba('salvos');  // <-- força mostrar aba Dias Salvos (chama sua função de troca de aba)
+  abrirAba('salvos');
+  console.log("Aba 'salvos' aberta.");
 
   const dias = carregarDados(app);
+  console.log("Dados carregados:", dias);
+
   const dia = dias[index];
+  console.log("Dia selecionado para edição:", dia);
 
   const container = document.getElementById('listaDiasSalvos');
-  container.innerHTML = ""; // Limpa tudo para exibir o formulário de edição
+  container.innerHTML = "";
+  console.log("Container 'listaDiasSalvos' limpo.");
 
   const div = document.createElement("div");
   div.className = "dia";
 
   div.innerHTML = `
-    <label><strong>Data:</strong></label>
-    <input type="date" value="${dia.data}" class="edit-data" />
+    <label for="edit-data-${app}-${index}"><strong>Data:</strong></label>
+    <input id="edit-data-${app}-${index}" type="date" value="${dia.data}" class="edit-data" />
 
-    <label><strong>Valor ganho (R$):</strong></label>
-    <input type="number" value="${dia.ganho}" class="edit-ganho" />
+    <label for="edit-ganho-${app}-${index}"><strong>Valor ganho (R$):</strong></label>
+    <input id="edit-ganho-${app}-${index}" type="number" value="${dia.ganho}" class="edit-ganho" />
 
     <div class="gastos-edit">
       ${dia.gastos.map((gasto, gi) => `
-        <input type="text" value="${gasto.nome}" class="edit-gasto-nome" data-index="${gi}" />
-        <input type="number" value="${gasto.valor}" class="edit-gasto-valor" data-index="${gi}" />
+        <label for="edit-gasto-nome-${app}-${index}-${gi}">Descrição</label>
+        <input id="edit-gasto-nome-${app}-${index}-${gi}" type="text" value="${gasto.nome}" class="edit-gasto-nome" data-index="${gi}" />
+
+        <label for="edit-gasto-valor-${app}-${index}-${gi}">Valor</label>
+        <input id="edit-gasto-valor-${app}-${index}-${gi}" type="number" value="${gasto.valor}" class="edit-gasto-valor" data-index="${gi}" />
       `).join("")}
     </div>
 
@@ -159,7 +169,9 @@ function editarDia(app, index) {
   `;
 
   container.appendChild(div);
+  console.log("Formulário de edição criado e adicionado ao DOM.");
 }
+
 
 
 
@@ -193,12 +205,21 @@ function salvarEdicaoDireta(botao, app, index) {
 
 
 function salvarEdicao(app, index) {
+  console.log(`Salvar edição chamada para app: ${app}, index: ${index}`);
+
   const container = document.getElementById("listaDiasSalvos");
-  // Pega o único elemento .dia dentro do container (o que está sendo editado)
   const diaDiv = container.querySelector('.dia');
+
+  if (!diaDiv) {
+    console.error("Elemento .dia não encontrado dentro de listaDiasSalvos!");
+    return;
+  }
 
   const novaData = diaDiv.querySelector(".edit-data").value;
   const novoGanho = parseFloat(diaDiv.querySelector(".edit-ganho").value);
+
+  console.log("Nova data:", novaData);
+  console.log("Novo ganho:", novoGanho);
 
   const nomes = diaDiv.querySelectorAll(".edit-gasto-nome");
   const valores = diaDiv.querySelectorAll(".edit-gasto-valor");
@@ -211,14 +232,20 @@ function salvarEdicao(app, index) {
       novosGastos.push({ nome, valor });
     }
   }
+  console.log("Novos gastos:", novosGastos);
 
-  const dias = carregarDados(app); // carrega dados atualizados
+  const dias = carregarDados(app);
   dias[index] = { data: novaData, ganho: novoGanho, gastos: novosGastos };
+
   salvarDados(app, dias);
 
-  mostrarDiasSalvos(); // Atualiza a lista toda
-  atualizarResumo(app); // Atualiza o resumo
+  console.log("Dados salvos no localStorage:", dias);
+
+  mostrarDiasSalvos();
+  atualizarResumo(app);
+  console.log("Lista atualizada e resumo atualizado.");
 }
+
 
 
 function calcularResumo(app) {
