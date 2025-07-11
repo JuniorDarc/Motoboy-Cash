@@ -97,7 +97,7 @@ if (ultimo) {
       ${ultimo.gastos.map(g => `<li>${g.nome}: R$ ${g.valor.toFixed(2)}</li>`).join("")}
     </ul>
     <button class="remove-btn" onclick="removerDia('${app}', ${index})">Excluir</button>
-    <button onclick="editarDia('${app}', ${index})">Editar</button>
+    <button onclick="editarDiaRegistro('${app}', ${index})">Editar</button>
   </div>`;
 }
 
@@ -131,49 +131,34 @@ function editarDia(app, index) {
   const dias = carregarDados(app);
   const dia = dias[index];
 
-  const container = document.getElementById("listaDiasSalvos");
-  container.innerHTML = ''; // Limpa tudo para re-renderizar
+  const container = document.querySelector(`#listaDiasSalvos`);
+  container.innerHTML = ""; // Limpa tudo para exibir somente o que está sendo editado
 
-  const titulo = document.createElement('h3');
-  titulo.textContent = app.charAt(0).toUpperCase() + app.slice(1);
-  container.appendChild(titulo);
+  const div = document.createElement("div");
+  div.className = "dia";
 
-  dias.forEach((d, i) => {
-    const div = document.createElement("div");
-    div.className = "dia";
+  // Monta os inputs para edição
+  div.innerHTML = `
+    <label><strong>Data:</strong></label>
+    <input type="date" value="${dia.data}" class="edit-data" />
 
-    if (i === index) {
-      // Dia em modo de edição
-      div.innerHTML = `
-        <label>Data:</label>
-        <input type="date" class="edit-data" value="${d.data}" />
+    <label><strong>Valor ganho (R$):</strong></label>
+    <input type="number" value="${dia.ganho}" class="edit-ganho" />
 
-        <label>Valor ganho:</label>
-        <input type="number" class="edit-ganho" value="${d.ganho}" />
+    <div class="gastos-edit">
+      ${dia.gastos.map((gasto, gi) => `
+        <input type="text" value="${gasto.nome}" class="edit-gasto-nome" data-index="${gi}" />
+        <input type="number" value="${gasto.valor}" class="edit-gasto-valor" data-index="${gi}" />
+      `).join("")}
+    </div>
 
-        <div class="gastos-edit">
-          ${d.gastos.map((gasto, gi) => `
-            <input type="text" class="edit-gasto-nome" value="${gasto.nome}" />
-            <input type="number" class="edit-gasto-valor" value="${gasto.valor}" />
-          `).join("")}
-        </div>
+    <button onclick="salvarEdicao('${app}', ${index})">Salvar Edição</button>
+    <button class="remove-btn" onclick="mostrarDiasSalvos()">Cancelar</button>
+  `;
 
-        <button onclick="salvarEdicao('${app}', ${i})">Salvar Edição</button>
-      `;
-    } else {
-      // Exibição normal
-      div.innerHTML = `
-        <strong style="font-size:1.1rem;">📅 ${d.data}</strong><br>
-        Ganho: R$ ${d.ganho.toFixed(2)}<br>
-        Gastos:<ul>${d.gastos.map(g => `<li>${g.nome}: R$ ${g.valor.toFixed(2)}</li>`).join("")}</ul>
-        <button onclick="editarDia('${app}', ${i})">Editar</button>
-        <button class="remove-btn" onclick="removerDia('${app}', ${i})">Excluir</button>
-      `;
-    }
-
-    container.appendChild(div);
-  });
+  container.appendChild(div);
 }
+
 
 
 function salvarEdicaoDireta(botao, app, index) {
@@ -205,9 +190,9 @@ function salvarEdicaoDireta(botao, app, index) {
 
 
 function salvarEdicao(app, index) {
-  const dias = carregarDados(app);
   const container = document.getElementById("listaDiasSalvos");
-  const diaDiv = container.querySelectorAll('.dia')[index];
+  // Pega o único elemento .dia dentro do container (o que está sendo editado)
+  const diaDiv = container.querySelector('.dia');
 
   const novaData = diaDiv.querySelector(".edit-data").value;
   const novoGanho = parseFloat(diaDiv.querySelector(".edit-ganho").value);
@@ -224,12 +209,14 @@ function salvarEdicao(app, index) {
     }
   }
 
+  const dias = carregarDados(app); // carrega dados atualizados
   dias[index] = { data: novaData, ganho: novoGanho, gastos: novosGastos };
   salvarDados(app, dias);
 
-  mostrarDiasSalvos(); // Atualiza tela
-  atualizarResumo(app); // Atualiza painel principal
+  mostrarDiasSalvos(); // Atualiza a lista toda
+  atualizarResumo(app); // Atualiza o resumo
 }
+
 
 function calcularResumo(app) {
   atualizarResumo(app);
@@ -295,6 +282,66 @@ function abrirAba(nome, event) {
     mostrarDiasSalvos();
   }
 }
+function editarDiaRegistro(app, index) {
+  const dia = dados[app][index];
+  const container = document.getElementById("formDias" + appId(app));
+  container.innerHTML = ''; // limpa a área
+
+  const div = document.createElement("div");
+  div.className = "dia";
+
+  div.innerHTML = `
+    <label>Data:</label>
+    <input type="date" class="data" value="${dia.data}" />
+    <label>Valor ganho (R$):</label>
+    <input type="number" class="ganho" value="${dia.ganho}" />
+    <div class="gastos">
+      ${dia.gastos.map(g => `
+        <div class="gasto">
+          <input type="text" value="${g.nome}" />
+          <input type="number" value="${g.valor}" />
+          <button class="remove-btn" onclick="this.parentElement.remove()">X</button>
+        </div>
+      `).join("")}
+    </div>
+    <button onclick="adicionarGasto(this)">Adicionar Gasto</button>
+    <button onclick="salvarEdicaoRegistro('${app}', ${index})">Salvar Edição</button>
+  `;
+
+  container.appendChild(div);
+}
+
+function salvarEdicaoRegistro(app, index) {
+  const container = document.getElementById("formDias" + appId(app));
+  const diaDiv = container.querySelector(".dia");
+
+  const novaData = diaDiv.querySelector(".data").value;
+  const novoGanho = parseFloat(diaDiv.querySelector(".ganho").value);
+
+  const nomes = diaDiv.querySelectorAll(".gasto input[type='text']");
+  const valores = diaDiv.querySelectorAll(".gasto input[type='number']");
+
+  const novosGastos = [];
+  for (let i = 0; i < nomes.length; i++) {
+    const nome = nomes[i].value;
+    const valor = parseFloat(valores[i].value);
+    if (nome && !isNaN(valor)) {
+      novosGastos.push({ nome, valor });
+    }
+  }
+
+  dados[app][index] = {
+    data: novaData,
+    ganho: novoGanho,
+    gastos: novosGastos
+  };
+
+  salvarDados(app, dados[app]);
+  atualizarResumo(app);
+
+  container.innerHTML = ''; // limpa a edição
+}
+
 
 function mostrarDiasSalvos() {
   const container = document.getElementById('listaDiasSalvos');
