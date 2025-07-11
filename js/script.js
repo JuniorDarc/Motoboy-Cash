@@ -128,32 +128,53 @@ function removerDia(app, index) {
 }
 
 function editarDia(app, index) {
-  const dia = dados[app][index];
-  const container = document.getElementById("formDias" + appId(app));
-  container.innerHTML = ""; // limpa o formulário da app
+  const dias = carregarDados(app);
+  const dia = dias[index];
 
-  const div = document.createElement("div");
-  div.className = "dia";
+  const container = document.getElementById("listaDiasSalvos");
+  container.innerHTML = ''; // Limpa tudo para re-renderizar
 
-  div.innerHTML = `
-    <label>Data:</label>
-    <input type="date" class="data" value="${dia.data}" />
-    <label>Valor ganho (R$):</label>
-    <input type="number" class="ganho" value="${dia.ganho}" />
-    <div class="gastos">
-      ${dia.gastos.map(g => `
-        <div class="gasto">
-          <input type="text" placeholder="Descrição" value="${g.nome}" />
-          <input type="number" placeholder="Valor (R$)" value="${g.valor}" />
-          <button class="remove-btn" onclick="this.parentElement.remove()">X</button>
-        </div>`).join("")}
-    </div>
-    <button onclick="adicionarGasto(this)">Adicionar Gasto</button>
-    <button onclick="salvarEdicaoDireta(this, '${app}', ${index})">Salvar Edição</button>
-  `;
+  const titulo = document.createElement('h3');
+  titulo.textContent = app.charAt(0).toUpperCase() + app.slice(1);
+  container.appendChild(titulo);
 
-  container.appendChild(div);
+  dias.forEach((d, i) => {
+    const div = document.createElement("div");
+    div.className = "dia";
+
+    if (i === index) {
+      // Dia em modo de edição
+      div.innerHTML = `
+        <label>Data:</label>
+        <input type="date" class="edit-data" value="${d.data}" />
+
+        <label>Valor ganho:</label>
+        <input type="number" class="edit-ganho" value="${d.ganho}" />
+
+        <div class="gastos-edit">
+          ${d.gastos.map((gasto, gi) => `
+            <input type="text" class="edit-gasto-nome" value="${gasto.nome}" />
+            <input type="number" class="edit-gasto-valor" value="${gasto.valor}" />
+          `).join("")}
+        </div>
+
+        <button onclick="salvarEdicao('${app}', ${i})">Salvar Edição</button>
+      `;
+    } else {
+      // Exibição normal
+      div.innerHTML = `
+        <strong style="font-size:1.1rem;">📅 ${d.data}</strong><br>
+        Ganho: R$ ${d.ganho.toFixed(2)}<br>
+        Gastos:<ul>${d.gastos.map(g => `<li>${g.nome}: R$ ${g.valor.toFixed(2)}</li>`).join("")}</ul>
+        <button onclick="editarDia('${app}', ${i})">Editar</button>
+        <button class="remove-btn" onclick="removerDia('${app}', ${i})">Excluir</button>
+      `;
+    }
+
+    container.appendChild(div);
+  });
 }
+
 
 function salvarEdicaoDireta(botao, app, index) {
   const diaDiv = botao.parentElement;
@@ -185,8 +206,8 @@ function salvarEdicaoDireta(botao, app, index) {
 
 function salvarEdicao(app, index) {
   const dias = carregarDados(app);
-  const container = document.querySelector(`#listaDiasSalvos`);
-  const diaDiv = container.children[index];
+  const container = document.getElementById("listaDiasSalvos");
+  const diaDiv = container.querySelectorAll('.dia')[index];
 
   const novaData = diaDiv.querySelector(".edit-data").value;
   const novoGanho = parseFloat(diaDiv.querySelector(".edit-ganho").value);
@@ -195,7 +216,6 @@ function salvarEdicao(app, index) {
   const valores = diaDiv.querySelectorAll(".edit-gasto-valor");
 
   const novosGastos = [];
-
   for (let i = 0; i < nomes.length; i++) {
     const nome = nomes[i].value;
     const valor = parseFloat(valores[i].value);
@@ -204,17 +224,12 @@ function salvarEdicao(app, index) {
     }
   }
 
-  dias[index] = {
-    data: novaData,
-    ganho: novoGanho,
-    gastos: novosGastos
-  };
-
+  dias[index] = { data: novaData, ganho: novoGanho, gastos: novosGastos };
   salvarDados(app, dias);
-  atualizarListaDiasSalvos();
-  calcularResumo(app);
-}
 
+  mostrarDiasSalvos(); // Atualiza tela
+  atualizarResumo(app); // Atualiza painel principal
+}
 
 function calcularResumo(app) {
   atualizarResumo(app);
@@ -319,3 +334,12 @@ function mostrarDiasSalvos() {
     container.innerHTML = '<p>Nenhum dia salvo ainda.</p>';
   }
 }
+
+function carregarDados(app) {
+  return JSON.parse(localStorage.getItem("dados_" + app)) || [];
+}
+
+function salvarDados(app, dadosApp) {
+  localStorage.setItem("dados_" + app, JSON.stringify(dadosApp));
+}
+
