@@ -8,35 +8,8 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
  <link rel="manifest" href="/Motoboy-Cash/manifest.json">
 <meta name="theme-color" content="#4a90e2" />
+
 </head>
-  
-  <script>
-  let deferredPrompt;
-  const btnInstalar = document.getElementById('instalarBtn');
-
-  window.addEventListener('beforeinstallprompt', (e) => {
-    // Impede o prompt automático
-    e.preventDefault();
-    deferredPrompt = e;
-    btnInstalar.style.display = 'inline-block'; // Exibe o botão
-  });
-
-  btnInstalar.addEventListener('click', () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      deferredPrompt.userChoice.then(choiceResult => {
-        if (choiceResult.outcome === 'accepted') {
-          console.log('Usuário aceitou a instalação');
-        } else {
-          console.log('Usuário recusou a instalação');
-        }
-        deferredPrompt = null;
-        btnInstalar.style.display = 'none';
-      });
-    }
-  });
-</script>
-
 
 <script>
 if ('serviceWorker' in navigator) {
@@ -49,10 +22,8 @@ if ('serviceWorker' in navigator) {
 <body>
   <div class="container">
     <h1>Motoboy Cash</h1>
-    
 
     <div class="tabs">
-       <button id="instalarBtn" style="display:none;">📲 Instalar App</button>
       <button class="tab-button active" onclick="abrirAba('entrada', event)">Registrar Dias</button>
       <button class="tab-button" onclick="abrirAba('salvos', event)">Dias Salvos</button>
     </div>
