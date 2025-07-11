@@ -128,16 +128,18 @@ function removerDia(app, index) {
 }
 
 function editarDia(app, index) {
+  // Força abrir a aba 'salvos' antes de mostrar o formulário de edição
+  abrirAba('salvos');  // <-- força mostrar aba Dias Salvos (chama sua função de troca de aba)
+
   const dias = carregarDados(app);
   const dia = dias[index];
 
-  const container = document.querySelector(`#listaDiasSalvos`);
-  container.innerHTML = ""; // Limpa tudo para exibir somente o que está sendo editado
+  const container = document.getElementById('listaDiasSalvos');
+  container.innerHTML = ""; // Limpa tudo para exibir o formulário de edição
 
   const div = document.createElement("div");
   div.className = "dia";
 
-  // Monta os inputs para edição
   div.innerHTML = `
     <label><strong>Data:</strong></label>
     <input type="date" value="${dia.data}" class="edit-data" />
@@ -158,6 +160,7 @@ function editarDia(app, index) {
 
   container.appendChild(div);
 }
+
 
 
 
@@ -274,14 +277,19 @@ function abrirAba(nome, event) {
   // Mostrar aba selecionada
   document.getElementById(nome).style.display = 'block';
 
-  // Ativar botão clicado
-  event.currentTarget.classList.add('active');
+  if(event) event.currentTarget.classList.add('active');
+  else {
+    // Se chamada programaticamente sem evento, ativa botão da aba
+    const btn = [...document.querySelectorAll('.tab-button')].find(b => b.textContent.toLowerCase().includes(nome.toLowerCase()));
+    if (btn) btn.classList.add('active');
+  }
 
   // Atualizar lista se for aba de dias salvos
   if (nome === 'salvos') {
     mostrarDiasSalvos();
   }
 }
+
 function editarDiaRegistro(app, index) {
   const dia = dados[app][index];
   const container = document.getElementById("formDias" + appId(app));
