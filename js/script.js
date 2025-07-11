@@ -1,4 +1,4 @@
-// Controle de Corridas Uber, InDrive, 99
+// motoBoy_Cash
 const apps = ["uber", "indrive", "99"];
 const dados = {
   uber: [],
