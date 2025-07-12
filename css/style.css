@@ -263,6 +263,7 @@ button:hover {
     margin-bottom: 1.5rem;
   }
 }
+
 .tabs {
   display: flex;
   gap: 12px;
@@ -290,9 +291,7 @@ button:hover {
   box-shadow: 0 3px 8px rgba(74,144,226,0.5);
 }
 
-.tab-content {
-  /* Conteúdos das abas (escondidos via display none) */
-}
+
 /* Container geral da aba Dias Salvos */
 .salvos-container {
   display: flex;
@@ -368,5 +367,46 @@ button:hover {
 .salvos-app .dia .data-destaque::before {
   content: '📅';
   font-size: 1.2rem;
+}
+
+/* Container do formulário de edição, visível no mobile */
+#listaDiasSalvos {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+}
+
+/* Quando estiver editando, o .dia deve ter largura 100% para caber em mobile */
+#listaDiasSalvos .dia {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Ajuste geral da aba dias salvos no mobile */
+@media (max-width: 600px) {
+  .salvos-container {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .salvos-app {
+    min-width: 100% !important;
+    flex-basis: auto;
+  }
+
+  /* Inputs do formulário de edição ocuparem toda a largura */
+  #listaDiasSalvos input[type="date"],
+  #listaDiasSalvos input[type="number"],
+  #listaDiasSalvos input[type="text"] {
+    width: 100%;
+  }
+
+  /* Botões no formulário de edição centralizados e espaçados */
+  #listaDiasSalvos button {
+    width: 100%;
+    margin-top: 8px;
+  }
 }
 
