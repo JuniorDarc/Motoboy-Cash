@@ -80,6 +80,10 @@ h1 {
   content: '🚦';
   font-size: 1.7rem;
 }
+#titulo_Calculo{
+  display: flex;
+  justify-content: center;
+}
 
 /* Container de dias */
 .diasContainer {
@@ -409,4 +413,53 @@ button:hover {
     margin-top: 8px;
   }
 }
+
+#listaDiasSalvos .dia input,
+#listaDiasSalvos .dia button {
+  width: 100%;
+  margin-top: 10px;
+}
+
+@media (max-width: 600px) {
+  #listaDiasSalvos .dia {
+    padding: 1rem;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  }
+}
+
+
+#Calculo {
+  background: #f8f8f8;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 5px 10px rgba(17, 17, 17, 0.05);
+  margin-top: 30px;
+  text-align: center;
+}
+
+#Calculo input {
+  margin: 0.5rem auto;
+  display: block;
+  width: 80%;
+  max-width: 400px;
+}
+
+#Calculo h3 {
+  margin-top: 1rem;
+  font-size: 1.3rem;
+  color: #333;
+}
+
+@media (max-width: 600px) {
+  #Calculo {
+    padding: 15px;
+  }
+
+  #Calculo input {
+    width: 100%;
+  }
+}
+
 

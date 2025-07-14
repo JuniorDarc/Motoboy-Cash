@@ -5,9 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Controle de Ganhos Uber/InDrive/99</title>
 
-  <!-- Define base para todos os links relativos -->
-  <base href="/Motoboy-Cash/">
-
   <link rel="stylesheet" href="css/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="manifest" href="manifest.json" />
@@ -56,7 +53,17 @@
           <button onclick="adicionarDia('99')">Adicionar Dia</button>
           <div id="resumo99" class="resumo"></div>
         </section>
-      </div>
+      </div>  
+
+      <!-- Mova isso para fora da div class="app-grid" -->
+<section id="Calculo">
+  <h2 id="titulo_Calculo">Calculo de KM/Litro</h2>
+  <input type="number" id="numero1" placeholder="Quilometragem Inicial">
+  <input type="number" id="numero2" placeholder="Quilometragem final">
+  <input type="number" id="numero3" placeholder="Quantidade de Gasolina">
+  <h3>Resultado: <span id="Resultado">0</span></h3>
+  <button onclick="CalcularKM()">Calcular KM</button>
+</section>
 
       <div class="consolidado-wrapper">
         <h2>Consolidado Geral</h2>
@@ -64,6 +71,7 @@
         <div id="resumoGeral" class="resumo"></div>
         <canvas id="graficoGastos" width="400" height="400"></canvas>
       </div>
+
     </div>
 
     <div id="salvos" class="tab-content" style="display: none;">
