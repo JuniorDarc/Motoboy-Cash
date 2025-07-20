@@ -226,6 +226,11 @@ button:hover {
   font-size: 2.1rem;
 }
 
+#butao_resete{
+  display: flex;
+  align-items: center;
+}
+
 .consolidado-wrapper button {
   background: #1565c0;
   margin-top: 15px;
