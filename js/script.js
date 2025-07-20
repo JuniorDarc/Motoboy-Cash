@@ -140,21 +140,23 @@ function removerDia(app, index) {
 }
 
 function editarDia(app, index) {
+  // Força abrir a aba 'salvos' antes de mostrar o formulário de edição
+  abrirAba('salvos');  // <-- força mostrar aba Dias Salvos (chama sua função de troca de aba)
+
   const dias = carregarDados(app);
   const dia = dias[index];
 
-  const container = document.querySelector(`#listaDiasSalvos`);
-  container.innerHTML = ""; // Limpa tudo
+  const container = document.getElementById('listaDiasSalvos');
+  container.innerHTML = ""; // Limpa tudo para exibir o formulário de edição
 
   const div = document.createElement("div");
   div.className = "dia";
 
-  // Cria os campos de edição apenas para esse dia
   div.innerHTML = `
-    <label>Data:</label>
+    <label><strong>Data:</strong></label>
     <input type="date" value="${dia.data}" class="edit-data" />
 
-    <label>Valor ganho:</label>
+    <label><strong>Valor ganho (R$):</strong></label>
     <input type="number" value="${dia.ganho}" class="edit-ganho" />
 
     <div class="gastos-edit">
@@ -165,11 +167,11 @@ function editarDia(app, index) {
     </div>
 
     <button onclick="salvarEdicao('${app}', ${index})">Salvar Edição</button>
+    <button class="remove-btn" onclick="mostrarDiasSalvos()">Cancelar</button>
   `;
 
   container.appendChild(div);
 }
-
 
 function salvarEdicaoDireta(botao, app, index) {
   const diaDiv = botao.parentElement;
@@ -404,4 +406,20 @@ function carregarDados(app) {
 function salvarDados(app, dadosApp) {
   localStorage.setItem("dados_" + app, JSON.stringify(dadosApp));
 }
+
+function resetarDadosMensais() {
+  // Zera os dados de dias para cada app
+  localStorage.removeItem('diasUber');
+  localStorage.removeItem('diasInDrive');
+  localStorage.removeItem('dias99');
+  localStorage.removeItem('dados_uber');
+  localStorage.removeItem('dados_indrive');
+  localStorage.removeItem('dados_99');
+  // Atualiza a tela se quiser
+  location.reload();
+}
+
+
+
+
 
